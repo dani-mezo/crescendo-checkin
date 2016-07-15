@@ -1,0 +1,108 @@
+.stuff {
+    margin: 5px;
+    padding: 3px;
+    width: 200px;
+    display: inline;
+}
+
+button.create {
+    position: relative;
+    left: 0%;
+}
+
+.pleasedontfloat {
+    clear: both;
+}
+
+.ui-autocomplete {
+    position: absolute;
+    z-index: 3000;
+    cursor: default;
+    padding: 0;
+    margin-top: 2px;
+    list-style: none;
+    background-color: #ffffff;
+    border: 1px solid #ccc
+-webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+.ui-autocomplete > li {
+    padding: 3px 20px;
+}
+.ui-autocomplete > li.ui-state-focus {
+    background-color: #DDD;
+}
+.ui-helper-hidden-accessible {
+    display: none;
+}
+
+.wrapper {
+    width: 465px;
+    margin: 0 auto;
+    text-align: center;
+    width: 70%;
+}
+
+.attributeWrapper{
+    width: 465px;
+    margin: 0 auto;
+    text-align: center;
+    width: 50%;
+}
+
+#sortableStations {
+    padding: 5px 0;
+}
+
+.column {
+    position: relative;
+    top: 0em;
+    text-align: center;
+}
+
+.columnHeader {
+    background-color: white;
+    position: relative;
+    top: 0.2em;
+}
+
+.columnHeader2 {
+    background-color: white;
+    position: relative;
+    top: -0.1em;
+}
+
+.centered {
+    text-align: center;
+    margin: 0 auto;
+}
+
+.columnHeaderHigher {
+    background-color: white;
+    position: relative;
+    top: 0em;
+}
+
+.whiteGlyphicon:hover {
+    color: #F0C425;
+}
+
+.blackGlyphicon:hover {
+    color: #F0C425;
+}
+
+li.clickable{
+    cursor: pointer;
+}
+
+.unclickable{
+    cursor: default;
+}
+
+.allbutton {
+    width: 75px !important;
+}

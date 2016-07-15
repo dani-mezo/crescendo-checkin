@@ -1,0 +1,133 @@
+<link rel="stylesheet" href="admin/admin.css">
+<div class="container-large">
+
+
+    <nav class="navbar navbar-default">
+        <div class="container">
+
+            <div class="navbar-header">
+                <a class="unclickable navbar-brand" href="">
+                    <img src="pics/logo-hu.png" width="80" style="vertical-align:middle; float: left;">
+                    <span>Crescendo Check-in Administration</span>
+                </a>
+
+            </div>
+
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li class="clickable" ng-class="{true:'active', false:''}[isCheckinView]"><a class="menu-item" ng-click="setCheckinView()">Check-in</a></li>
+                    <li class="clickable" ng-class="{true:'active', false:''}[isVolunteerManagementView]"><a class="menu-item" ng-click="setVolunteerManagementView()">Volunteer Management</a></li>
+                    <li class="clickable" ng-class="{true:'active', false:''}[isCrescendoPeopleView]"><a class="menu-item" ng-click="setCrescendoPeopleView()">Crescendo People</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a class="unclickable" href="" role="button" aria-haspopup="true" aria-expanded="false"> <span class="glyphicon glyphicon-user"></span> Admin </a>
+                    </li>
+
+                    <li class="dropdown">
+                        <a class="clickable" ng-click="logout()" href="" role="button" aria-haspopup="true" aria-expanded="false"> <span class="glyphicon glyphicon-log-out"></span> Log out </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+
+
+    <!--------------------------------- Checkin --------------------------------->
+
+    <div class="demo-md-panel md-padding" ng-show="isCheckinView">
+        <div >
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2>
+                        <span>Primarily</span>
+                    </h2>
+                    <span flex></span>
+                    <md-button ng-click="openDialog($event)" class="md-raised"><span class="glyphicon glyphicon-plus"></span></md-button>
+                </div>
+            </md-toolbar>
+            <div class="panel-content">
+            <div class="panel-content">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Username</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tr ng-repeat="username in checkin.primarily">
+                        <th>{{volunteers[username].firstname}} {{volunteers[username].lastname}}</th>
+                        <th>{{username}}</th>
+                        <th>
+                            <button class="btn btn-danger btn-sm create" ng-click="removePrimarily(username)" >
+                                <span class="glyphicon glyphicon-remove" style="vertical-align:middle"></span>
+                            </button>
+                        </th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="demo-md-panel md-padding" ng-show="isCheckinView">
+        <div >
+            <md-toolbar>
+                <div class="md-toolbar-tools">
+                    <h2>
+                        <span>Secondary</span>
+                    </h2>
+                    <span flex></span>
+                    <md-button ng-click="openSecondary($event)" class="md-raised"><span class="glyphicon glyphicon-plus"></span></md-button>
+                </div>
+            </md-toolbar>
+            <div class="panel-content">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Username</th>
+                        <th>Attributes</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tr ng-repeat="volunteer in checkin.secondary">
+                        <th>{{volunteers[volunteer.username].firstname}} {{volunteers[volunteer.username].lastname}}</th>
+                        <th>{{volunteer.username}}</th>
+                        <th>
+                            <md-chips ng-model="volunteer.attributes" md-on-remove="attrRemoved($chip, volunteer.username)" readonly="false" md-max-chips="15">
+                                <md-chip-template>
+                                    <strong>{{$chip}}</strong>
+                                </md-chip-template>
+                            </md-chips>
+                        </th>
+                        <th>
+                            <button class="btn btn-danger btn-sm create" ng-click="removeSecondary(volunteer.username)" >
+                                <span class="glyphicon glyphicon-remove" style="vertical-align:middle"></span>
+                            </button>
+                        </th>
+                    </tr>
+
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <div ng-show="isVolunteerManagementView">
+        vol
+        <button class="btn btn-lg btn-primary btn-block" ng-click="getVolunteers()">Sign up</button>
+
+    </div>
+
+    <div ng-show="isCrescendoPeopleView">
+        ppl
+
+    </div>
+</div>
+
+

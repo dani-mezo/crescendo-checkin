@@ -1,0 +1,50 @@
+
+<link rel="stylesheet" href="login/login.css">
+
+<div class="container">
+
+
+
+    <div class="tab-content">
+
+        <div id="login" class="login" ng-show="isLoginView" ng-class="{true:'active', false: ''}[isLoginView == true]">
+            <div class="heading">
+                <form class="form-signin">
+                    <div class="logo" ng-click="switchLogin()">
+                        <img src="/pics/checkinlogo2.png" style="vertical-align:middle; float: left;">
+                    </div>
+                    <label for="username" class="sr-only">Username</label>
+                    <input type="text" id="username" ng-model="username" class="form-control" placeholder="Username" autocomplete="off" required autofocus>
+                    <label for="password" class="sr-only">Password</label>
+                    <input type="password" id="password" ng-model="password" class="form-control" placeholder="Password" autocomplete="off" required>
+                    <button class="btn btn-lg btn-primary btn-block" ng-click="login()">Sign in</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="signup" class="login" ng-show="isSignupView" ng-class="{true:'active', false: ''}[isSignupView == true]">
+            <div class="heading">
+                <form class="form-signin">
+                    <div class="logo" ng-click="switchLogin()">
+                        <img src="/pics/checkinlogo2.png" style="vertical-align:middle; float: left;">
+                    </div>
+                    <label for="signup_firstname" class="sr-only">Username</label>
+                    <input type="text" id="signup_firstname" ng-model="signup_firstname" class="form-control" placeholder="First name" autocomplete="off" required autofocus>
+                    <label for="signup_lastname" class="sr-only">Username</label>
+                    <input type="text" id="signup_lastname" ng-model="signup_lastname" class="form-control" placeholder="Last name" autocomplete="off" required autofocus>
+                    <label for="signup_username" class="sr-only">Username</label>
+                    <input type="text" id="signup_username" ng-model="signup_username" class="form-control" placeholder="Username" autocomplete="off" required autofocus>
+
+                    <label for="signup_password" class="sr-only">Password</label>
+                    <input  type="password" id="signup_password" ng-model="signup_password" class="form-control" placeholder="Password" autocomplete="off" required autofocus>
+
+                    <label for="signup_password_confirm" class="sr-only">Password confirmation</label>
+                    <input  type="password" id="signup_password_confirm" ng-model="signup_password_confirm" class="form-control" autocomplete="off" placeholder="Password confirmation" required autofocus>
+
+                    <button class="btn btn-lg btn-primary btn-block" ng-click="signup()">Sign up</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>
