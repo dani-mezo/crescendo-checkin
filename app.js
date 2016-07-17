@@ -71,6 +71,8 @@ checkinService.setDatabaseService(databaseService);
 var socketService = new SocketService(log, io, identityService, eventProvider, roleProvider);
 var r = new Router(log, router, identityService, dataService, statusProvider, routerMessageProvider, socketService, _);
 
-
+app.get('/', function (req, res) {
+    res.status('200').send('Service is up');
+});
 app.use('/', router);
 
