@@ -3,6 +3,9 @@
   "private": true,
   "version": "0.0.0",
   "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
   "dependencies": {
     "mongodb": "~2.2.0",
 	"express": "~4.13.1",
