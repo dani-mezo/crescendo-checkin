@@ -43,7 +43,7 @@ var DatabaseService = function(log, RoleProvider, StatusProvider, DatabaseErrorP
 
         if(err) {
             log.err("Failed to connect to MongoDB", target);
-            throw err;
+            return;
         }
 
         users = db.collection('users');
@@ -78,6 +78,8 @@ var DatabaseService = function(log, RoleProvider, StatusProvider, DatabaseErrorP
     }
 
     function pureInsertVolunteer(volunteer, callback){
+        if(!volunteers) return;
+
         volunteers.insert(volunteer, function(err, records){
             var status;
             var message;
@@ -96,6 +98,8 @@ var DatabaseService = function(log, RoleProvider, StatusProvider, DatabaseErrorP
     }
 
     function getVolunteer(username, callback){
+        if(!volunteers) return;
+
         volunteers.find({username: username}, {_id:0}).toArray(function (err, volunteers) {
             if(err){
                 log.err(err);
@@ -154,10 +158,11 @@ var DatabaseService = function(log, RoleProvider, StatusProvider, DatabaseErrorP
         });
     }
 
-    function saveUsers(users, callback){
+    function saveUsers(ss, callback){
+        if(!users) return;
         users.remove();
 
-        users.insert(users, function(err, records){
+        users.insert(ss, function(err, records){
             if(err){
                 callback({status: StatusProvider.FAILED, message: DatabaseErrorProvider.DB_ERROR});
             } else {
@@ -167,6 +172,7 @@ var DatabaseService = function(log, RoleProvider, StatusProvider, DatabaseErrorP
     }
 
     function saveUser(user, callback){
+        if(!users) return;
 
         users.insert(user, function(err, records){
             if(err){
@@ -180,6 +186,7 @@ var DatabaseService = function(log, RoleProvider, StatusProvider, DatabaseErrorP
 
     function authenticateVolunteer(username, password, callback){
 
+        if(!users) return;
 
         if(username === RoleProvider.ADMIN) {
             handleAdmin(password, callback);
@@ -223,6 +230,9 @@ var DatabaseService = function(log, RoleProvider, StatusProvider, DatabaseErrorP
     }
 
     function saveToken(username, token){
+
+        if(!volunteers) return;
+
         volunteers.updateOne({ username: username }, { $set: { token: token } }, function (err) {
             if (err) {
                 log.err('Token update failed', target);
@@ -234,6 +244,8 @@ var DatabaseService = function(log, RoleProvider, StatusProvider, DatabaseErrorP
     }
 
     function authorizeToken(username, token, callback){
+
+        if(!volunteers) return;
 
         if(username === RoleProvider.ADMIN) {
             handleAdminToken(token, callback);
@@ -312,6 +324,9 @@ var DatabaseService = function(log, RoleProvider, StatusProvider, DatabaseErrorP
     }
 
     function resolveIssue(id){
+
+        if(!users) return;
+
         log.info('Issue resolved', target);
 
         users.updateOne({ id: id }, { $set: { isSignedByZsuzsi: true } }, function (err) {
