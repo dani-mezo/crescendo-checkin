@@ -51,12 +51,17 @@ angular.module('crescendo-checkin')
             }
         }
 
+        function clear(){
+            notify.closeAll();
+        }
+
         return {
             info: info,
             success: success,
             warn: warn,
             err: err,
-            responseNotify: responseNotify
+            responseNotify: responseNotify,
+            clear: clear
         }
     });
 

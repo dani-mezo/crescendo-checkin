@@ -6,10 +6,6 @@ var IdentityService = function(log, DatabaseService, RoleProvider, StatusProvide
 
     var target = 'IdentityService';
 
-    function authorize(task, token, callback){
-        //TODO
-    }
-
     function authenticate(username, password, callback){
 
         func = 'Authenticate volunteer';
@@ -17,6 +13,17 @@ var IdentityService = function(log, DatabaseService, RoleProvider, StatusProvide
         log.info(func, target);
 
         DatabaseService.authenticateVolunteer(username, password, function(status){
+            statusHandler(status, func, callback);
+        });
+    }
+
+    function tokenAuthorization(username, token, callback){
+
+        func = 'Authorize token';
+
+        log.info(func, target);
+
+        DatabaseService.authorizeToken(username, token, function(status){
             statusHandler(status, func, callback);
         });
     }
@@ -48,7 +55,8 @@ var IdentityService = function(log, DatabaseService, RoleProvider, StatusProvide
 
     return {
         authenticate: authenticate,
-        newVolunteer: newVolunteer
+        newVolunteer: newVolunteer,
+        tokenAuthorization: tokenAuthorization
     }
 }
 

@@ -19,6 +19,36 @@ var DataService = function(log, DatabaseService, RoleProvider, StatusProvider, A
         });
     }
 
+    function getUsers(callback){
+        var func = 'Get users';
+
+        log.info(func, target);
+
+        DatabaseService.getUsers(function(status){
+            statusHandler(status, func, callback);
+        });
+    }
+
+    function saveUsers(callback){
+        var func = 'Save users';
+
+        log.info(func, target);
+
+        DatabaseService.saveUsers(function(status){
+            statusHandler(status, func, callback);
+        });
+    }
+
+    function saveUser(user, callback){
+        var func = 'Save a user';
+
+        log.info(func, target);
+
+        DatabaseService.saveUser(user, function(status){
+            statusHandler(status, func, callback);
+        });
+    }
+
     function getSecondaryAttributes(callback){
         callback(new AppResponse(StatusProvider.OK, "Secondary attributes requested successfully", SecondaryProvider, {}));
     }
@@ -40,6 +70,10 @@ var DataService = function(log, DatabaseService, RoleProvider, StatusProvider, A
         }
     }
 
+    function issueResolved(id){
+        DatabaseService.resolveIssue(id);
+    }
+
     function statusHandler(status, f, callback){
 
         var res = new AppResponse(status.status, status.message, status.data);
@@ -54,7 +88,11 @@ var DataService = function(log, DatabaseService, RoleProvider, StatusProvider, A
         getPrimarilyAttributes: getPrimarilyAttributes,
         getSecondaryAttributes: getSecondaryAttributes,
         getCheckinConfiguration: getCheckinConfiguration,
-        saveCheckinConfiguration: saveCheckinConfiguration
+        saveCheckinConfiguration: saveCheckinConfiguration,
+        getUsers: getUsers,
+        saveUser: saveUser,
+        saveUsers: saveUsers,
+        issueResolved: issueResolved
     }
 }
 

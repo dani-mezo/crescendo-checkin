@@ -1,10 +1,94 @@
 
 <link rel="stylesheet" href="primarily/primarily.css">
 
-<div class="container">
+<div class="container-large" id="popupContainer">
 
 
+    <nav class="navbar navbar-default">
+        <div class="container">
 
-primarily
+            <div class="navbar-header">
+                <a class="unclickable navbar-brand" href="">
+                    <img src="pics/logo-hu.png" width="80" style="vertical-align:middle; float: left;">
+                    <span>Crescendo Check-in &nbsp;&#8210;&nbsp; Elsődleges állomás</span>
+                </a>
+
+            </div>
+
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a class="clickable" href="" role="button" aria-haspopup="true" aria-expanded="false"> <span class="glyphicon glyphicon-user"></span> {{name}} </a>
+                    </li>
+
+                    <li class="dropdown">
+                        <a class="clickable" ng-click="logout()" href="" role="button" aria-haspopup="true" aria-expanded="false"> <span class="glyphicon glyphicon-log-out"></span> Log out </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <md-autocomplete ng-disabled="doesCheckinStarted || isDataLoading" md-no-cache="noCache" md-selected-item="selectedItem" md-search-text-change="searchTextChange(searchText)" md-search-text="searchText" md-selected-item-change="selectedItemChange(item)" md-items="item in querySearch(searchText)" md-item-text="item.display" md-min-length="0" placeholder="Keresés a felhasználók között">
+        <md-item-template>
+            <span md-highlight-text="searchText" md-highlight-flags="^i">{{item.display}}</span>
+        </md-item-template>
+        <md-not-found>
+            {{emptySearchString}}
+        </md-not-found>
+    </md-autocomplete>
+
+    <div ng-show="doesCheckinStarted">
+        <table class="table">
+            <thead>
+            <tr>
+                <th> Név </th>
+                <th> Távozási dátum </th>
+                <th ng-show="simpleUser.isAdult"> IFA papír </th>
+                <th ng-show="!simpleUser.isAdult"> ANTSZ papír </th>
+                <th ng-show="!simpleUser.isAdult"> Szülői nyilatkozat </th>
+                <th> Depozit csekk </th>
+                <th> Diéta </th>
+            </tr>
+            </thead>
+            <tr>
+                <td>{{simpleUser.name}}</td>
+                <td><md-datepicker ng-model="simpleUser.input.leaveDate" md-placeholder="Távozási dátum"></md-datepicker></td>
+                <td ng-show="simpleUser.isAdult">
+                    <md-checkbox ng-model="simpleUser.input.checkedIFA" aria-label="IFA">
+                    </md-checkbox>
+                </td>
+                <td ng-show="!simpleUser.isAdult">
+                    <md-checkbox ng-model="simpleUser.input.checkedANTSZ" aria-label="ANTSZ">
+                    </md-checkbox>
+                </td>
+                <td ng-show="!simpleUser.isAdult">
+                    <md-checkbox ng-model="simpleUser.input.checkedParentDeclaration" aria-label="Parent declaration">
+                    </md-checkbox>
+                </td>
+                <td>
+                    <md-checkbox ng-model="simpleUser.input.checkedDeposit" aria-label="deposit check">
+                    </md-checkbox>
+                </td>
+                <td>
+                    {{simpleUser.diet}} &nbsp;
+                    <md-checkbox ng-model="simpleUser.input.checkedDiet" aria-label="diet check">
+                    </md-checkbox>
+                </td>
+            </tr>
+
+        </table>
+
+        <button class="btn btn-default btn-xlarge create" ng-click="cancelCheckin()" >
+            Mégse
+        </button>
+        <button class="btn btn-primary btn-xlarge create" ng-click="doneCheckin()" >
+            Kész
+        </button>
+    </div>
 
 </div>

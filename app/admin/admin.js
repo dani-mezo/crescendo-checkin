@@ -9,7 +9,7 @@ angular.module('crescendo-checkin.admin', ['ngRoute'])
   });
 }])
 
-.controller('AdminController', function($scope, $http, _, $mdDialog, storageProvider, notifyProvider, $location, util) {
+.controller('AdminController', function($scope, $http, _, $mdDialog, storageProvider, notifyProvider, $location, util, $rootScope) {
         var vm = $scope;
 
         var isCheckinView = true;
@@ -133,11 +133,7 @@ angular.module('crescendo-checkin.admin', ['ngRoute'])
 
 
         function logout(){
-            storageProvider.set(constProvider.TOKEN, '');
-            storageProvider.set(constProvider.ROLE, '');
-            storageProvider.set(constProvider.FIRSTNAME, '');
-            storageProvider.set(constProvider.LASTNAME, '');
-            storageProvider.set(constProvider.USERNAME, '');
+            storageProvider.clear();
             notifyProvider.success('Successfully logged out!');
             $location.path('/');
         }
@@ -407,4 +403,13 @@ angular.module('crescendo-checkin.admin', ['ngRoute'])
 
         }
 
+
+        $rootScope.$on('$routeChangeStart', function (ev, to, toParams, from, fromParams) {
+            if(!storageProvider.get(constProvider.ROLE)){
+                $location.path('/login');
+            }
+            if ($location.url() !== '/' + storageProvider.get(constProvider.ROLE)) {
+                $location.path(storageProvider.get(constProvider.ROLE));
+            }
+        });
 });

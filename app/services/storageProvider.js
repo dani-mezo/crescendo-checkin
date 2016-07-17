@@ -12,28 +12,32 @@ function storageProvider($timeout){
     var storage = localStorage;
 
     function set(name, value){
-        storage.name = value;
+        storage[name] = value;
     }
 
     function get(name){
-        if(!name || !storage.name){
-            console.error('ERROR: cannot get value from the storage - ' + _name);
+        if(!name || !storage[name]){
             return;
         }
-        return storage.name;
+        return storage[name];
     }
 
     function getNumber(name){
-        if(!name || !storage.name){
-            console.error('ERROR: cannot get value from the storage - ' + _name);
+        if(!name || !storage[name]){
             return;
         }
-        return Number(storage.name);
+        return Number(storage[name]);
+    }
+
+    function clear(){
+        storage.clear();
     }
 
     return {
         get: get,
         set: set,
-        getNumber: getNumber
+        getNumber: getNumber,
+
+        clear: clear
     }
 }

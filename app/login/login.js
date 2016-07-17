@@ -10,7 +10,7 @@ angular.module('crescendo-checkin.login', ['ngRoute', 'cgNotify'])
 }])
 
 .controller('LoginController',
-    function($scope, $location, connectionProvider, storageProvider, constProvider, $timeout, eventProvider, viewProvider, log, reasonProvider, $http, notifyProvider, statusProvider) {
+    function($scope, $location, connectionProvider, storageProvider, constProvider, $timeout, eventProvider, viewProvider, log, reasonProvider, $http, notifyProvider, statusProvider, $rootScope, roleProvider) {
         var target = 'LoginController';
 
         var vm = $scope;
@@ -23,6 +23,7 @@ angular.module('crescendo-checkin.login', ['ngRoute', 'cgNotify'])
         vm.isLoginView = true;
         vm.isSignupView = false;
 
+        autoLogin();
 
         function login(){
           if(vm.username && vm.password){
@@ -34,30 +35,31 @@ angular.module('crescendo-checkin.login', ['ngRoute', 'cgNotify'])
           }
         }
 
-        function handleLoginResponse(res) {
-            var response = res.data;
+        function autoLogin(){
+            var token = storageProvider.get(constProvider.TOKEN);
+            var username = storageProvider.get(constProvider.USERNAME);
+            if(token && username){
+                var data = {token: token, username: username};
+                $http.post('/token', data).then(handleAutoLoginResponse, errorCallback);
+            }
+        }
 
-            console.log(response);
+        function handleAutoLoginResponse(res){
+
+            var response = res.data;
 
             if (response.status === statusProvider.OK) {
 
-                var volunteer = response.data;
-                var meta = response.meta;
-                var message = response.message;
+                standardLogin(response);
+            }
+        }
 
-                storageProvider.set(constProvider.TOKEN, meta.token);
-                storageProvider.set(constProvider.ROLE, meta.role);
-                storageProvider.set(constProvider.FIRSTNAME, volunteer.firstname);
-                storageProvider.set(constProvider.LASTNAME, volunteer.lastname);
-                storageProvider.set(constProvider.USERNAME, volunteer.username);
+        function handleLoginResponse(res) {
+            var response = res.data;
 
-                $location.path(meta.role);
+            if (response.status === statusProvider.OK) {
 
-                notifyProvider.success(message);
-
-                setTimeout(function(){
-                    notifyProvider.success('Welcome ' + volunteer.firstname + ' ' + volunteer.lastname + '!');
-                }, 2000);
+                standardLogin(response);
 
             } else {
                 if(response.message){
@@ -66,6 +68,44 @@ angular.module('crescendo-checkin.login', ['ngRoute', 'cgNotify'])
                     notifyProvider.err("Something went wrong!");
                 }
             }
+        }
+
+        function standardLogin(response){
+            var volunteer = response.data;
+            var meta = response.meta;
+            var message = response.message;
+
+            console.log(response)
+            if(meta.role !== roleProvider.UNKNOWN) {
+                storageProvider.set(constProvider.TOKEN, meta.token);
+                storageProvider.set(constProvider.FIRSTNAME, volunteer.firstname);
+                storageProvider.set(constProvider.LASTNAME, volunteer.lastname);
+                storageProvider.set(constProvider.USERNAME, volunteer.username);
+            }
+            storageProvider.set(constProvider.ROLE, meta.role);
+            storageProvider.set(constProvider.NAME, volunteer.firstname + ' ' + volunteer.lastname);
+
+
+            $location.path(meta.role);
+
+            notifyProvider.success(message);
+
+            setTimeout(function(){
+                notifyProvider.success('Welcome ' + volunteer.firstname + ' ' + volunteer.lastname + '!');
+            }, 2000);
+
+            scopeListener();
+        }
+
+        function scopeListener(){
+            $rootScope.$on('$routeChangeStart', function (ev, to, toParams, from, fromParams) {
+                if(!storageProvider.get(constProvider.ROLE)){
+                    $location.path('/login');
+                }
+                if ($location.url() !== '/' + storageProvider.get(constProvider.ROLE)) {
+                    $location.path(storageProvider.get(constProvider.ROLE));
+                }
+            });
         }
 
         function signup(){

@@ -19,6 +19,8 @@ var server_ip_address = process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1';
 
 server.listen(server_port, server_ip_address, "0.0.0.0");
 
+var _ = require('lodash');
+
 // Require app
 var LogService = require('./server/LogService');
 var SocketService = require('./server/SocketService');
@@ -37,6 +39,7 @@ var ResponseProvider = require('./server/ConstantProviders/ResponseProvider');
 var DefaultProvider = require('./server/ConstantProviders/DefaultProvider');
 var PrimarilyProvider = require('./server/ConstantProviders/PrimarilyProvider');
 var SecondaryProvider = require('./server/ConstantProviders/SecondaryProvider');
+var PrimarilyIDProvider = require('./server/ConstantProviders/PrimarilyIDProvider');
 
 var Router = require('./server/Router');
 
@@ -52,7 +55,8 @@ var routerMessageProvider = new RouterMessageProvider();
 var databaseErrorProvider = new DatabaseErrorProvider();
 var responseProvider = new ResponseProvider();
 var defaultProvider = new DefaultProvider();
-var primarilyProvider = new PrimarilyProvider();
+var primarilyIDProvider = new PrimarilyIDProvider();
+var primarilyProvider = new PrimarilyProvider(primarilyIDProvider);
 var secondaryProvider = new SecondaryProvider();
 
 // Instantiate app
@@ -65,7 +69,7 @@ checkinService.setDatabaseService(databaseService);
 
 // Connections
 var socketService = new SocketService(log, io, identityService, eventProvider, roleProvider);
-var r = new Router(log, router, identityService, dataService, statusProvider, routerMessageProvider);
+var r = new Router(log, router, identityService, dataService, statusProvider, routerMessageProvider, socketService, _);
 
 
 app.use('/', router);

@@ -8,8 +8,11 @@ var DatabaseErrorProvider = function() {
         COLLECTION_FAILURE: 'Collection is not initialized',
         GET_VOLUNTEERS_FAILURE: 'Failed to get volunteers',
         GET_VOLUNTEERS_SUCCESS: 'Successfully got volunteers',
-        DB_ERROR: "Database error occurred"
-
+        DB_ERROR: "Database error occurred",
+        TOKEN_FAIL_ADMIN: 'Token not valid for admin',
+        TOKEN_FAIL_ZSUZSI: 'Token not valid for zsuzsi',
+        GET_USERS_FAILURE: 'Failed to get users',
+        GET_USERS_SUCCESS: 'Successfully got all users'
     }
 }
 

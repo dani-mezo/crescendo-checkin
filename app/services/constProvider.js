@@ -13,6 +13,7 @@ function constProvider(){
         NAME: "name",
         FIRSTNAME: "firstname",
         LASTNAME: "lastname",
-        USERNAME: "username"
+        USERNAME: "username",
+        NAME: "name"
     }
 }

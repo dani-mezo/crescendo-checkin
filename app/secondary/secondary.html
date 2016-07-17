@@ -1,8 +1,35 @@
 
 <link rel="stylesheet" href="secondary/secondary.css">
 
-<div class="container">
+<div class="container-large">
 
+    <nav class="navbar navbar-default">
+        <div class="container">
+
+            <div class="navbar-header">
+                <a class="unclickable navbar-brand" href="">
+                    <img src="pics/logo-hu.png" width="80" style="vertical-align:middle; float: left;">
+                    <span>Crescendo Check-in &nbsp;&#8210;&nbsp; Másodlagos állomás</span>
+                </a>
+
+            </div>
+
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a class="unclickable" href="" role="button" aria-haspopup="true" aria-expanded="false"> <span class="glyphicon glyphicon-user"></span> {{name}} </a>
+                    </li>
+
+                    <li class="dropdown">
+                        <a class="clickable" ng-click="logout()" href="" role="button" aria-haspopup="true" aria-expanded="false"> <span class="glyphicon glyphicon-log-out"></span> Log out </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
 
 secondary

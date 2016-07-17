@@ -46,10 +46,11 @@ var DatabaseService = function(log, RoleProvider, StatusProvider, DatabaseErrorP
             throw err;
         }
 
-        users = db.collection('emails');
+        users = db.collection('users');
         volunteers = db.collection('volunteers');
 
         //volunteers.remove();
+        //users.remove();
 
         log.info("Successfully connected to MongoDb", target);
     });
@@ -131,6 +132,52 @@ var DatabaseService = function(log, RoleProvider, StatusProvider, DatabaseErrorP
         });
     }
 
+    function getUsers(callback){
+        if(!users){
+            return collectionFailure(callback);
+        }
+
+        users.find({}, {_id:0}).toArray(function (err, users) {
+            var message;
+            var status;
+            if (err) {
+                message = DatabaseErrorProvider.GET_USERS_FAILURE;
+                log.err(message, target);
+                status = StatusProvider.FAILED;
+            } else {
+                message = DatabaseErrorProvider.GET_USERS_SUCCESS;
+                log.info(message, target);
+                status = StatusProvider.OK;
+            }
+
+            callback({status: status, message: message, data: users});
+        });
+    }
+
+    function saveUsers(users, callback){
+        users.remove();
+
+        users.insert(users, function(err, records){
+            if(err){
+                callback({status: StatusProvider.FAILED, message: DatabaseErrorProvider.DB_ERROR});
+            } else {
+                callback({status: StatusProvider.OK, message: 'Users loaded successfully'});
+            }
+        });
+    }
+
+    function saveUser(user, callback){
+
+        users.insert(user, function(err, records){
+            if(err){
+                console.log(err);
+                callback({status: StatusProvider.FAILED, message: DatabaseErrorProvider.DB_ERROR});
+            } else {
+                callback({status: StatusProvider.OK, message: 'User ' + user.name_full + ' loaded successfully'});
+            }
+        });
+    }
+
     function authenticateVolunteer(username, password, callback){
 
 
@@ -186,6 +233,31 @@ var DatabaseService = function(log, RoleProvider, StatusProvider, DatabaseErrorP
         });
     }
 
+    function authorizeToken(username, token, callback){
+
+        if(username === RoleProvider.ADMIN) {
+            handleAdminToken(token, callback);
+            return;
+        }
+        if(username === RoleProvider.ZSUZSI) {
+            handleZsuzsiToken(token, callback);
+            return;
+        }
+
+        volunteers.find({token: token}).toArray(function (err, volunteers) {
+            if(err){
+                log.err(err);
+                return callback({status: StatusProvider.FAILED, message: DatabaseErrorProvider.DB_ERROR});
+            }
+
+            if(volunteers[0]){
+                return callback({status: StatusProvider.OK, message: ResponseProvider.SUCCESS_LOGIN, data: volunteers[0], meta: {token: volunteers[0].token, role: CheckinService.getRole(username)}});
+            } else {
+                callback({status: StatusProvider.FAILED, message: "No token was found"});
+            }
+        });
+    }
+
     function handleAdmin(password, callback){
 
         log.info('Admin login attempt', target);
@@ -215,6 +287,44 @@ var DatabaseService = function(log, RoleProvider, StatusProvider, DatabaseErrorP
     }
 
 
+    function handleAdminToken(token, callback){
+
+        log.info('Admin auto login attempt', target);
+
+        if(token === ADMIN.token){
+
+            return callback({status: StatusProvider.OK, message: ResponseProvider.SUCCESS_LOGIN, data: PUBLIC_ADMIN, meta: {token: ADMIN.token, role: RoleProvider.ADMIN}});
+        }
+
+        callback({status: StatusProvider.FAILED, message: DatabaseErrorProvider.TOKEN_FAIL_ADMIN});
+    }
+
+    function handleZsuzsiToken(token, callback){
+
+        log.info('Zsuzsi auto login attempt', target);
+
+        if(token === ZSUZSI.token){
+
+            return callback({status: StatusProvider.OK, message: ResponseProvider.SUCCESS_LOGIN, data: PUBLIC_ZSUZSI, meta: {token: ZSUZSI.token, role: RoleProvider.ZSUZSI}});
+        }
+
+        callback({status: StatusProvider.FAILED, message: DatabaseErrorProvider.TOKEN_FAIL_ZSUZSI});
+    }
+
+    function resolveIssue(id){
+        log.info('Issue resolved', target);
+
+        users.updateOne({ id: id }, { $set: { isSignedByZsuzsi: true } }, function (err) {
+            if (err) {
+                log.err('Issue could not been resolved', target);
+            }
+            else {
+                log.info('Issue updated successfully', target);
+            }
+        });
+    }
+
+
     //-- Error handling
 
     function collectionFailure(callback){
@@ -239,8 +349,12 @@ var DatabaseService = function(log, RoleProvider, StatusProvider, DatabaseErrorP
     return {
         insertVolunteer: insertVolunteer,
         getVolunteers: getVolunteers,
-        authenticateVolunteer: authenticateVolunteer
-
+        authenticateVolunteer: authenticateVolunteer,
+        authorizeToken: authorizeToken,
+        getUsers: getUsers,
+        saveUser: saveUser,
+        saveUsers: saveUsers,
+        resolveIssue: resolveIssue
     }
 }
 
